@@ -67,7 +67,7 @@ app = FastAPI(title="microchat")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials = True,
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -163,11 +163,12 @@ async def model_status():
 async def download_model():
     if MODEL_PATH.exists():
         def already_exists():
-            yield f"data: 100\n\n"
+            yield "data: 100\n\n"
         return StreamingResponse(already_exists(), media_type="text/event-stream")
 
     def download_with_progress():
         try:
+            print(f"Starting download from {MODEL_URL}")
             with requests.get(MODEL_URL, stream=True, timeout=300) as response:
                 response.raise_for_status()
                 total = int(response.headers.get('content-length', 0))
@@ -180,9 +181,11 @@ async def download_model():
                             downloaded += len(chunk)
                             if total > 0:
                                 progress = int((downloaded / total) * 100)
+                                # SSE format: "data: <message>\n\n"
                                 yield f"data: {progress}\n\n"
+                                print(f"Download progress: {progress}%")
 
-                yield f"data: 100\n\n"
+                yield "data: 100\n\n"
                 print(f"Download complete: {MODEL_PATH}")
 
         except Exception as e:

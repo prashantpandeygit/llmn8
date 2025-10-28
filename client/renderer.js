@@ -1,3 +1,4 @@
+const API = `http://localhost:55440`;
 const dot = document.getElementById('dot');
 const status = document.getElementById('status');
 const chat = document.getElementById('chat');
@@ -11,10 +12,8 @@ let ready = false;
 
 async function checkHealth() {
   try {
-    const data = await window.electronAPI.checkHealth();
-    if (data.error) {
-      throw new Error(data.error);
-    }
+    const res = await fetch(`${API}/health`);
+    const data = await res.json();
     dot.classList.add('ok');
     status.textContent = data.model_loaded ? 'Ready' : 'Connected';
     ready = data.model_loaded;
@@ -38,11 +37,69 @@ async function checkHealth() {
   }
 }
 
+downloadBtn.onclick = async () => {
+  downloadBtn.textContent = 'Downloading...';
+  downloadBtn.disabled = true;
+  progressBar.style.width = '0%';
+
+  try {
+    const eventSource = new EventSource(`${API}/download-model`);
+
+    eventSource.onmessage = (event) => {
+      console.log('Received:', event.data); 
+      
+      const data = event.data.trim();
+
+      if (data.startsWith('error|')) {
+        const error = data.substring(6);
+        eventSource.close();
+        addMsg('ai', 'Download failed: ' + error);
+        downloadBtn.textContent = 'Download Model';
+        downloadBtn.disabled = false;
+        return;
+      }
+
+      try {
+        const progress = parseInt(data);
+        if (!isNaN(progress)) {
+          progressBar.style.width = progress + '%';
+          
+          if (progress >= 100) {
+            eventSource.close();
+            addMsg('ai', 'Model downloaded successfully!');
+            downloadBtn.textContent = 'Downloaded';
+            load.disabled = false;
+            
+            setTimeout(checkHealth, 1000);
+          }
+        }
+      } catch (e) {
+        console.error('Error parsing progress:', e);
+      }
+    };
+
+    eventSource.onerror = (error) => {
+      console.error('EventSource error:', error);
+      eventSource.close();
+      addMsg('ai', 'Download connection lost. Please check if the backend is running.');
+      downloadBtn.textContent = 'Download Model';
+      downloadBtn.disabled = false;
+    };
+
+  } catch (e) {
+    console.error('Download error:', e);
+    addMsg('ai', 'Error: ' + e.message);
+    downloadBtn.textContent = 'Download Model';
+    downloadBtn.disabled = false;
+  }
+};
+
 load.onclick = async () => {
   load.textContent = 'Loading...';
   load.disabled = true;
   try {
-    const data = await window.electronAPI.loadModel();
+    const res = await fetch(`${API}/load-model`, { method: 'POST' });
+    const data = await res.json();
     if (data.success) {
       ready = true;
       send.disabled = false;
@@ -66,11 +123,12 @@ send.onclick = async () => {
 
   const thinking = addMsg('ai', 'Thinking...');
   try {
-    const data = await window.electronAPI.generate({
-      prompt: text,
-      max_tokens: 512,
-      temperature: 0.7,
+    const res = await fetch(`${API}/generate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt: text, max_tokens: 512, temperature: 0.7 }),
     });
+    const data = await res.json();
     thinking.remove();
     addMsg('ai', data.response);
   } catch (e) {
