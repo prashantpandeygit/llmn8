@@ -1,0 +1,43 @@
+{
+  "name": "microchat",
+  "version": "1.0.0",
+  "description": "Electron frontend for microchat connecting to local FastAPI backend.",
+  "main": "main.js",
+  "author": "rictr",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "package": "electron-packager . microchat --platform=win32 --arch=x64 --out=release-builds --overwrite",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win"
+  },
+  "devDependencies": {
+    "electron": "^31.7.7",
+    "electron-builder": "^24.13.3",
+    "electron-packager": "^17.1.2"
+  },
+  "build": {
+    "appId": "com.microchat.frontend",
+    "productName": "microchat",
+    "files": [
+      "index.html",
+      "main.js",
+      "assets/**/*"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "shortcutName": "microchat",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  }
+}
