@@ -195,12 +195,12 @@ async def download_model():
 
 if __name__ == "__main__":
     def run_server():
-        uvicorn.run(app, host="127.0.0.1", port=55440)
+        uvicorn.run(app, host="0.0.0.0", port=55440)
 
     server_thread = threading.Thread(target=run_server, daemon=True)
     server_thread.start()
 
-    print("Backend started at http://127.0.0.1:55440")
+    print("Backend started at http://0.0.0.0:55440")
 
     try:
         while True:
