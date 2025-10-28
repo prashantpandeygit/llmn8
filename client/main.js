@@ -19,7 +19,6 @@ function createWindow() {
   win.loadFile('index.html');
 }
 
-// Helper function to make HTTP requests from main process
 function makeRequest(url, options = {}) {
   return new Promise((resolve, reject) => {
     const protocol = url.startsWith('https') ? https : http;
@@ -42,7 +41,6 @@ function makeRequest(url, options = {}) {
   });
 }
 
-// IPC handlers
 ipcMain.handle('check-health', async () => {
   try {
     return await makeRequest(`${API}/health`);
