@@ -1,4 +1,4 @@
-const API = 'http://127.0.0.1:55440';
+const API = `http://localhost:55440`;
 const dot = document.getElementById('dot');
 const status = document.getElementById('status');
 const chat = document.getElementById('chat');
@@ -33,6 +33,7 @@ async function checkHealth() {
   } catch {
     status.textContent = 'Offline';
     dot.classList.remove('ok');
+    ready = false;
   }
 }
 
