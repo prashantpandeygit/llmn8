@@ -22,6 +22,8 @@
     "files": [
       "index.html",
       "main.js",
+      "renderer.js",
+      "preload.js",
       "assets/**/*"
     ],
     "directories": {

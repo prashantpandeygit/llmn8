@@ -1,4 +1,3 @@
-const API = `http://localhost:55440`;
 const dot = document.getElementById('dot');
 const status = document.getElementById('status');
 const chat = document.getElementById('chat');
@@ -12,8 +11,10 @@ let ready = false;
 
 async function checkHealth() {
   try {
-    const res = await fetch(`${API}/health`);
-    const data = await res.json();
+    const data = await window.electronAPI.checkHealth();
+    if (data.error) {
+      throw new Error(data.error);
+    }
     dot.classList.add('ok');
     status.textContent = data.model_loaded ? 'Ready' : 'Connected';
     ready = data.model_loaded;
@@ -37,57 +38,11 @@ async function checkHealth() {
   }
 }
 
-downloadBtn.onclick = async () => {
-  downloadBtn.textContent = 'Downloading...';
-  downloadBtn.disabled = true;
-  progressBar.style.width = '0%';
-
-  try {
-    const eventSource = new EventSource(`${API}/download-model`);
-
-    eventSource.onmessage = (event) => {
-      const data = event.data;
-
-      if (data.startsWith('error|')) {
-        const error = data.substring(6);
-        eventSource.close();
-        addMsg('ai', 'Download failed: ' + error);
-        downloadBtn.textContent = 'Download Model';
-        downloadBtn.disabled = false;
-        return;
-      }
-
-      const progress = parseInt(data);
-      progressBar.style.width = progress + '%';
-
-      if (progress === 100) {
-        eventSource.close();
-        addMsg('ai', 'Model downloaded successfully!');
-        downloadBtn.textContent = 'Downloaded';
-        load.disabled = false;
-      }
-    };
-
-    eventSource.onerror = () => {
-      eventSource.close();
-      addMsg('ai', 'Download connection lost');
-      downloadBtn.textContent = 'Download Model';
-      downloadBtn.disabled = false;
-    };
-
-  } catch (e) {
-    addMsg('ai', '' + e.message);
-    downloadBtn.textContent = 'Download Model';
-    downloadBtn.disabled = false;
-  }
-};
-
 load.onclick = async () => {
   load.textContent = 'Loading...';
   load.disabled = true;
   try {
-    const res = await fetch(`${API}/load-model`, { method: 'POST' });
-    const data = await res.json();
+    const data = await window.electronAPI.loadModel();
     if (data.success) {
       ready = true;
       send.disabled = false;
@@ -111,12 +66,11 @@ send.onclick = async () => {
 
   const thinking = addMsg('ai', 'Thinking...');
   try {
-    const res = await fetch(`${API}/generate`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt: text, max_tokens: 512, temperature: 0.7 }),
+    const data = await window.electronAPI.generate({
+      prompt: text,
+      max_tokens: 512,
+      temperature: 0.7,
     });
-    const data = await res.json();
     thinking.remove();
     addMsg('ai', data.response);
   } catch (e) {
