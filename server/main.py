@@ -28,7 +28,7 @@ from llama_cpp import Llama
 
 MODEL_FILENAME = "Phi-3-mini-4k-instruct.Q4_K_M.gguf"
 MODEL_URL = (
-    "https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf/blob/main/Phi-3-mini-4k-instruct-q4.gguf"
+    "https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf/resolve/main/Phi-3-mini-4k-instruct-q4.gguf"
 )
 
 def get_model_path():
