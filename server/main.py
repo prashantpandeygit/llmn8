@@ -26,13 +26,12 @@ fix_llama_lib_path()
 
 from llama_cpp import Llama
 
-MODEL_FILENAME = "Phi-3-mini-4k-instruct.Q4_K_M.gguf"
+MODEL_FILENAME = "Llama-3.2-3B-Instruct-Q4_0.gguf"
 MODEL_URL = (
-    "https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf/resolve/main/Phi-3-mini-4k-instruct-q4.gguf"
+    "https://huggingface.co/bartowski/Llama-3.2-3B-Instruct-GGUF/resolve/main/Llama-3.2-3B-Instruct-Q4_0.gguf"
 )
 
 def get_model_path():
-    """Get cross-platform model storage path."""
     if os.name == 'nt':
         base_dir = Path(os.getenv('APPDATA')) / 'microchat'
     elif os.name == 'posix':
@@ -123,7 +122,7 @@ async def generate(req: GenerateRequest):
 
     try:
         formatted_prompt = (
-            "<|system|>\nrespond as per user questions.\n"
+            "<|system|>\nrespond as per questions.\n"
             f"<|user|>\n{req.prompt}\n"
             "<|assistant|>"
         )
