@@ -26,10 +26,10 @@ fix_llama_lib_path()
 
 from llama_cpp import Llama
 
-MODEL_FILENAME = "tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf"
+MODEL_FILENAME = "Phi-3-mini-4k-instruct.Q4_K_M.gguf"
 MODEL_URL = (
-    "https://huggingface.co/TheBloke/TinyLlama-1.1B-Chat-v1.0-GGUF/"
-    "resolve/main/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf"
+    "https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf/"
+    "resolve/main/Phi-3-mini-4k-instruct.Q4_K_M.gguf"
 )
 
 def get_model_path():
