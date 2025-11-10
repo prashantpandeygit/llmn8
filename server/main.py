@@ -179,7 +179,6 @@ async def download_model():
                             downloaded += len(chunk)
                             if total > 0:
                                 progress = int((downloaded / total) * 100)
-                                # SSE format: "data: <message>\n\n"
                                 yield f"data: {progress}\n\n"
                                 print(f"Download progress: {progress}%")
 
