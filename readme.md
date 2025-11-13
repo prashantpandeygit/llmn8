@@ -1,4 +1,4 @@
-This repo is an implementaion of an LLM, which is downloaded locally into user's directory, given the user has to get the launcher from the url - microchat.rict.in, and has to-
+This repo is an implementation of an LLM, which is downloaded locally into user's directory, given the user has to get the launcher from the url - microchat.rict.in, and has to-
 1. extract the zip file
 2. install the microchat-ui-installer and launch it.
 3. (the ui is offline, and no buttons accessible).
