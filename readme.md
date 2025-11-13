@@ -4,7 +4,7 @@ This repo is an implementaion of an LLM, which is downloaded locally into user's
 3. (the ui is offline, and no buttons accessible).
 4. go to the other folder exe.win-amd64-3.11 and launch the microchat.exe
 5. the local api will lauch within a time frame of 10-15 seconds.
-6. now the microchat app shows connectivity and he download model button is now functional.
+6. now the microchat app shows connectivity and the download model button is now functional.
 7. press the download button (progress can be seen in the background on the terminal).
 8. after the model has downloaded its completion, now press the load the model.
 9. the model will be loaded into the ui within 5 seconds.
