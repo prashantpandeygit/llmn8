@@ -1,7 +1,7 @@
 This repo is an implementaion of an LLM, which is downloaded locally into user's directory, given the user has to get the launcher from the url - microchat.rict.in, and has to-
 
 1. extract the zip file
-2. launch the microchat-ui-installer and launch it.
+2. install the microchat-ui-installer and launch it.
 3. (the ui will show offline, and no buttons accessible).
 4. go to the next folder exe.win-amd64-3.11 and launch the microchat.exe
 5. the local api will lauch within a time frame of 10-15 seconds.
